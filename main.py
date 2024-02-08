@@ -1,16 +1,22 @@
-# This is a sample Python script.
+import pytesseract
+import pandas as pd
+from PIL import Image
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+df = pd.read_csv('bing-europe-countries.csv')
 
+pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+img = Image.open('img/img_1.png')
+country_name = pytesseract.image_to_string(img).strip()
+selected_rows = df.loc[df['Country'] == country_name]
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+if not selected_rows.empty:
+    print(f"""
+        Country: {selected_rows['Country'].values[0]}
+        Capital: {selected_rows['Capital'].values[0]}
+        Currency: {selected_rows['Currency'].values[0]}
+        Population: {selected_rows['Population'].values[0]}
+        GDP (Billion USD): {selected_rows['GDP (Billion USD)'].values[0]}
+        """)
+else:
+    print(f"Country '{country_name}' does not exist")
 
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
